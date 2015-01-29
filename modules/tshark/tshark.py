@@ -106,13 +106,23 @@ class Tshark:
 
 def main():
 
+	# Input
 	test_input = "split_00000_20120316133000.pcap"
+
+	# Output
 	test_output = "test.csv"
 
+	# Create tshark object
 	shark = Tshark("tshark", "input\\", "output\\")
+
+	# Add fields
 	shark.add_fields_by_category("tcp")
 	shark.add_fields_by_category("ip")
+
+	# Add filters
 	shark.add_filter("tcp")
+
+	# Create command
 	shark.create_command(test_input, test_output)
 
 	print(shark.execution_command)
