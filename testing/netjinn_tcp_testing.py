@@ -53,7 +53,7 @@ class TcpJinnTestCase(unittest.TestCase):
 		if (self.tcp_test.flags_to_string_list(2048))["rsvd3"] == 1:
 			correct += 1
 
-		self.assertEqual(correct, 12)
+		self.assertEqual(correct, 12, "Incorrect number of flags recognized.")
 
 
 if __name__ == '__main__':
