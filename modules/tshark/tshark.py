@@ -1,3 +1,5 @@
+from subprocess import call, check_output
+import os
 
 class Tshark:
 
@@ -9,7 +11,6 @@ class Tshark:
 		self.input_path = in_path
 		self.output_path = out_path
 		self.exec_path = exe_path
-
 
 		self.network_fields_names = {
 			"ip" : {
@@ -84,6 +85,14 @@ class Tshark:
 		:return:
 		"""
 
+		# Initial path checks
+		if not os.path.exists(self.exec_path):
+			print("[ERR] Path", self.exec_path, "does not exist.")
+		if not os.path.exists(self.input_path + filename):
+			print("[ERR] Path", self.input_path + filename, "does not exist.")
+		if not os.path.exists(self.output_path):
+			print("[ERR] Path", self.output_path, "does not exist.")
+
 		# Adds path to tshark executable
 		self.execution_command += self.exec_path
 
@@ -102,18 +111,28 @@ class Tshark:
 		# Adds output directory
 		self.execution_command += " > " + self.output_path + out_filename
 
+	def execute(self):
+		"""
+		Executes tshark /shell required/
+		:return:
+		"""
+		try:
+			call(self.execution_command, shell=True)
+		except:
+			print("Failed to execute tshark.")
+			print("Failed command:", self.execution_command)
 
 
 def main():
 
 	# Input
-	test_input = "split_00000_20120316133000.pcap"
+	test_input = "smaller_00002_20120316134254.pcap"
 
 	# Output
 	test_output = "test.csv"
 
 	# Create tshark object
-	shark = Tshark("tshark", "input\\", "output\\")
+	shark = Tshark("D:\\Apps\\Wireshark\\tshark.exe", "..\\..\\input\\pcap\\", "..\\..\\input\\csv\\")
 
 	# Add fields
 	shark.add_fields_by_category("tcp")
@@ -125,7 +144,8 @@ def main():
 	# Create command
 	shark.create_command(test_input, test_output)
 
-	print(shark.execution_command)
+	# Execute
+	shark.execute()
 
 if __name__ == "__main__":
 	main()
