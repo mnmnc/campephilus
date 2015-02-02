@@ -70,6 +70,24 @@ class Tcp:
 
 		return flag_dict
 
+	def split_data_to_streams(self, data, stream_id_position):
+		result = {}
+
+		for packet in data:
+			if packet[stream_id_position] not in result.keys():
+				tmp = []
+				for i in range(len(packet)):
+					if i != stream_id_position:
+						tmp.append(packet[i])
+				result.update({packet[stream_id_position] : [tmp]})
+			else:
+				tmp = []
+				for i in range(len(packet)):
+					if i != stream_id_position:
+						tmp.append(packet[i])
+				result[packet[stream_id_position]].append([tmp])
+		return result
+
 def main():
 
 	tcp = Tcp()
@@ -78,3 +96,4 @@ def main():
 
 if __name__ == "__main__":
 	main()
+

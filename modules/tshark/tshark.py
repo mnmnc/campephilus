@@ -21,7 +21,9 @@ class Tshark:
 			"tcp" : {
 				"src": " -e tcp.srcport",
 			    "dst": " -e tcp.dstport",
-			    "flags": " -e tcp.flags"
+			    "flags": " -e tcp.flags",
+			    "seq": " -e tcp.seq",
+			    "stream": " -e tcp.stream"
 			},
 			"frame" : {
 				"time": " -e frame.time_epoch",

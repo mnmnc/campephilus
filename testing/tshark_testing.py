@@ -19,7 +19,7 @@ class TsharkTestCase(unittest.TestCase):
 	def test_tshark_tcp_fields__(self):
 		self.shark = tshark.Tshark("tshark", "input\\", "output\\")
 		self.shark.add_fields_by_category("tcp")
-		self.assertEqual( self.shark.fields.count("tcp") , 3)
+		self.assertEqual( self.shark.fields.count("tcp") , 5)
 
 	def test_tshark_ip_fields___(self):
 		self.shark = tshark.Tshark("tshark", "input\\", "output\\")

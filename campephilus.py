@@ -112,14 +112,18 @@ def main():
 	cam.add_tool({"ip": ip.Ip()})
 
 	# Add fields
-	cam.tools["shark"].add_fields_by_category("tcp")
 	cam.tools["shark"].add_field("frame", "time")
+	cam.tools["shark"].add_field("tcp", "stream")
+	cam.tools["shark"].add_field("tcp", "seq")
+	cam.tools["shark"].add_field("tcp", "flags")
+	cam.tools["shark"].add_field("tcp", "src")
+	cam.tools["shark"].add_field("tcp", "dst")
 
 	# Add limitation filter
 	cam.tools["shark"].add_filter("tcp")
 
 	# Create command
-	cam.tools["shark"].create_command("smaller_00002_20120316134254.pcap", "out.csv")
+	cam.tools["shark"].create_command("infinz_00001_20140408174617.pcap", "out.csv")
 
 	# Show me what you got
 	#cam.showoff(True)
@@ -139,7 +143,14 @@ def main():
 		}
 	})
 
-	print(cam.tools["tcp"].flags_to_string_list(2345))
+	for row in cam.jobs["job_id"]["data"]:
+		print(row)
+
+	t = cam.tools["tcp"].split_data_to_streams(cam.jobs["job_id"]["data"], 1)
+
+	for row in t:
+		print(row, ":" ,t[row])
+
 
 
 if __name__ == "__main__":
