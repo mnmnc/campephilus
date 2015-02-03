@@ -119,10 +119,10 @@ def main():
 	cam.add_tool({"ip": ip.Ip()})
 
 	# Add fields
-	#cam.tools["shark"].add_field("frame", "time")
+	cam.tools["shark"].add_field("frame", "time")
 	cam.tools["shark"].add_field("tcp", "stream")
 	cam.tools["shark"].add_field("tcp", "seq")
-	#cam.tools["shark"].add_field("tcp", "flags")
+	cam.tools["shark"].add_field("tcp", "flags")
 	cam.tools["shark"].add_field("tcp", "src")
 	cam.tools["shark"].add_field("tcp", "dst")
 
@@ -153,25 +153,30 @@ def main():
 	for row in cam.jobs["job_id"]["data"]:
 		print(row)
 
-	t = cam.tools["tcp"].split_data_to_streams(cam.jobs["job_id"]["data"], 0)
+	t = cam.tools["tcp"].split_data_to_streams(cam.jobs["job_id"]["data"], 1)
 
 	for row in t:
 		print(row, ":")
-		for packet in t[row]:
-			print("\t",packet)
-	# 	name = "D:\\OUT4\\stream_" + row + ".png"
-	# 	xs = []
-	# 	ys = []
-	# 	for packet in t[row]:
-	# 		print("\t",packet)
-	# 		xs.append(packet[0])
-	# 		ys.append(packet[1])
-	# 		xs.append(packet[0])
-	# 		ys.append(packet[2])
-	#
-	# 	cam.tools["plot"].plot( xs,ys , "line", "b", 0.7)
-	# 	cam.tools["plot"].save(name)
-	# 	cam.tools["plot"].clear_plot()
+
+		name = "D:\\OUT4\\stream_" + row + ".png"
+
+		cons = cam.tools["tcp"].split_data_to_streams(t[row], 1)
+		xs = []
+		ys = []
+		for row2 in cons:
+
+			print("\t",row2, ":")
+			for packet in cons[row2]:
+				print("\t\t",packet)
+				xs.append(packet[1])
+				ys.append(packet[2])
+				xs.append(packet[1])
+				ys.append(packet[2])
+
+			cam.tools["plot"].plot( xs,ys , "line", "b", 0.7)
+
+		cam.tools["plot"].save(name)
+		cam.tools["plot"].clear_plot()
 	#
 	#
 	# cam.tools["plot"].plot([1,4,9,16], [1,2,3,4], "line", "r", 0.4)
