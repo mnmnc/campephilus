@@ -4,7 +4,7 @@ from modules.tshark import tshark
 from modules.csvimporter import csvimp
 from modules.netjinn import tcp
 from modules.netjinn import ip
-
+from modules.plotter import plot
 
 class Campephilus:
 
@@ -73,6 +73,9 @@ class Campephilus:
 		return headers
 
 
+def numeric_compare(x, y):
+	return x - y
+
 def main():
 
 	cam = Campephilus()
@@ -107,15 +110,19 @@ def main():
 		)
 	})
 
+	cam.add_tool({"plot":plot.Plot()})
+	plot.plt.gcf()
+
+
 	# Create TCP and IP tools
 	cam.add_tool({"tcp": tcp.Tcp()})
 	cam.add_tool({"ip": ip.Ip()})
 
 	# Add fields
-	cam.tools["shark"].add_field("frame", "time")
+	#cam.tools["shark"].add_field("frame", "time")
 	cam.tools["shark"].add_field("tcp", "stream")
 	cam.tools["shark"].add_field("tcp", "seq")
-	cam.tools["shark"].add_field("tcp", "flags")
+	#cam.tools["shark"].add_field("tcp", "flags")
 	cam.tools["shark"].add_field("tcp", "src")
 	cam.tools["shark"].add_field("tcp", "dst")
 
@@ -146,10 +153,29 @@ def main():
 	for row in cam.jobs["job_id"]["data"]:
 		print(row)
 
-	t = cam.tools["tcp"].split_data_to_streams(cam.jobs["job_id"]["data"], 1)
+	t = cam.tools["tcp"].split_data_to_streams(cam.jobs["job_id"]["data"], 0)
 
 	for row in t:
-		print(row, ":" ,t[row])
+		print(row, ":")
+		for packet in t[row]:
+			print("\t",packet)
+	# 	name = "D:\\OUT4\\stream_" + row + ".png"
+	# 	xs = []
+	# 	ys = []
+	# 	for packet in t[row]:
+	# 		print("\t",packet)
+	# 		xs.append(packet[0])
+	# 		ys.append(packet[1])
+	# 		xs.append(packet[0])
+	# 		ys.append(packet[2])
+	#
+	# 	cam.tools["plot"].plot( xs,ys , "line", "b", 0.7)
+	# 	cam.tools["plot"].save(name)
+	# 	cam.tools["plot"].clear_plot()
+	#
+	#
+	# cam.tools["plot"].plot([1,4,9,16], [1,2,3,4], "line", "r", 0.4)
+	# cam.tools["plot"].save("D:\\test.png")
 
 
 

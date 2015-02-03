@@ -85,7 +85,7 @@ class Tcp:
 				for i in range(len(packet)):
 					if i != stream_id_position:
 						tmp.append(packet[i])
-				result[packet[stream_id_position]].append([tmp])
+				result[packet[stream_id_position]].append(tmp)
 		return result
 
 def main():
