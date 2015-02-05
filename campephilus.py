@@ -226,7 +226,7 @@ def main():
 	# 	 3 {'5.135.250.51', '37.187.81.8'} [0, 2, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0]
 
 	for key in stream_dictionary.keys():
-		print(key)
+	#print(key)
 		for stream in stream_dictionary[key]:
 			print("\t", stream, ip_list[key], flags_dictionary[stream])
 
