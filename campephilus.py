@@ -119,12 +119,19 @@ def main():
 	cam.add_tool({"ip": ip.Ip()})
 
 	# Add fields
-	cam.tools["shark"].add_field("frame", "time")
+	# cam.tools["shark"].add_field("frame", "time")
+	# cam.tools["shark"].add_field("tcp", "stream")
+	# cam.tools["shark"].add_field("tcp", "seq")
+	# cam.tools["shark"].add_field("tcp", "flags")
+	# cam.tools["shark"].add_field("tcp", "src")
+	# cam.tools["shark"].add_field("tcp", "dst")
+	#cam.tools["shark"].add_fields_by_category("frame")
+	# cam.tools["shark"].add_fields_by_category("ip")
+	# cam.tools["shark"].add_fields_by_category("tcp")
+	cam.tools["shark"].add_field("ip", "src")
+	cam.tools["shark"].add_field("ip", "dst")
 	cam.tools["shark"].add_field("tcp", "stream")
-	cam.tools["shark"].add_field("tcp", "seq")
 	cam.tools["shark"].add_field("tcp", "flags")
-	cam.tools["shark"].add_field("tcp", "src")
-	cam.tools["shark"].add_field("tcp", "dst")
 
 	# Add limitation filter
 	cam.tools["shark"].add_filter("tcp")
@@ -136,7 +143,6 @@ def main():
 	#cam.showoff(True)
 
 	# Execute shark
-
 	cam.tools["shark"].execute()
 
 	# Load data from csv file
@@ -150,37 +156,81 @@ def main():
 		}
 	})
 
+
+	###
+	### TESTING
+	###
+
+	# List of IP pairs (unique pairs so A:B equals B:A)
+	ip_list = []
+
+	# List of streams per given IP address pair
+	stream_dictionary = {}
+
+	# List of flags per stream
+	# FIN SYN RST PSH ACK URG ECN CWR NCE RSD
+	flags_dictionary = {}
+
+	# Collecting IP address pairs
 	for row in cam.jobs["job_id"]["data"]:
-		print(row)
+		if {row[0], row[1]} in ip_list:
+			pass
+		else:
+			ip_list.append({row[0], row[1]})
 
-	t = cam.tools["tcp"].split_data_to_streams(cam.jobs["job_id"]["data"], 1)
+	# Collecting stream IDs for given IP address pair
+	for i in range(len(ip_list)):
+		stream_inner_dictionary = []
+		for row in cam.jobs["job_id"]["data"]:
+			if {row[0], row[1]} == ip_list[i]:
+				if row[2] not in stream_inner_dictionary:
+					stream_inner_dictionary.append(row[2])
+		stream_dictionary.update({i:stream_inner_dictionary})
 
-	for row in t:
-		print(row, ":")
+	# Collecting flags count per stream per IP address pair
+	for key in stream_dictionary.keys():
+		for stream in stream_dictionary[key]:
+			flags = [0,0,0,0,0,0,0,0,0,0,0,0]
+			for row in cam.jobs["job_id"]["data"]:
+				if {row[0], row[1]} == ip_list[key] and row[2] == stream:
+					flags_dict = cam.tools["tcp"].flags_to_string_list(row[3])
+					if flags_dict["fin"] == 1:
+						flags[0] += 1
+					if flags_dict["syn"] == 1:
+						flags[1] += 1
+					if flags_dict["rst"] == 1:
+						flags[2] += 1
+					if flags_dict["psh"] == 1:
+						flags[3] += 1
+					if flags_dict["ack"] == 1:
+						flags[4] += 1
+					if flags_dict["urg"] == 1:
+						flags[5] += 1
+					if flags_dict["ecn"] == 1:
+						flags[6] += 1
+					if flags_dict["cwr"] == 1:
+						flags[7] += 1
+					if flags_dict["nce"] == 1:
+						flags[8] += 1
+					if flags_dict["rsvd1"] == 1 or flags_dict["rsvd2"] == 1 or flags_dict["rsvd3"] == 1 :
+						flags[9] += 1
+			flags_dictionary.update({stream: flags})
 
-		name = "D:\\OUT4\\stream_" + row + ".png"
+	# Printing results:
+	# 0
+	# 	 0 {'87.205.141.29', '37.187.81.8'} [2, 0, 0, 30, 49, 0, 0, 0, 0, 0, 0, 0]
+	# 1
+	# 	 1 {'198.13.112.236', '37.187.81.8'} [0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+	# 2
+	# 	 2 {'5.135.250.51', '37.187.81.8'} [0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+	# 	 3 {'5.135.250.51', '37.187.81.8'} [0, 2, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0]
 
-		cons = cam.tools["tcp"].split_data_to_streams(t[row], 1)
-		xs = []
-		ys = []
-		for row2 in cons:
+	for key in stream_dictionary.keys():
+		print(key)
+		for stream in stream_dictionary[key]:
+			print("\t", stream, ip_list[key], flags_dictionary[stream])
 
-			print("\t",row2, ":")
-			for packet in cons[row2]:
-				print("\t\t",packet)
-				xs.append(packet[1])
-				ys.append(packet[2])
-				xs.append(packet[1])
-				ys.append(packet[2])
 
-			cam.tools["plot"].plot( xs,ys , "line", "b", 0.7)
-
-		cam.tools["plot"].save(name)
-		cam.tools["plot"].clear_plot()
-	#
-	#
-	# cam.tools["plot"].plot([1,4,9,16], [1,2,3,4], "line", "r", 0.4)
-	# cam.tools["plot"].save("D:\\test.png")
 
 
 
