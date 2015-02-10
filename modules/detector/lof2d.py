@@ -97,10 +97,55 @@ def main():
 
 	lof = LOF2D(points)
 
-
+	# 1. Calculate all the distances
 	lof.create_distance_dictionary()
+
+	lof.print_neighbours()
+
+	# 2. Get all neighbours that are closer or equal to k neighbour
 	lof.get_knn(3)
+
 	lof.print_k_distances()
+
+	# 3. Calculate local reachability density for all points
+
+	# FOR [1, 2] - first point
+
+		# Get number of neighbours
+	point_neighbours_count = len(lof.k_distances[(1,2)])
+	print("Neighbours count:", point_neighbours_count)
+
+		# For each neighbour calculate reachdist
+			# maximum from
+			#               distance from neighbour to its k neighbour
+			#               or
+			#               distance from neighbour to original point
+	sum = 0
+	for point in lof.k_distances[(1,2)]:
+		print("Calculating reachdist for", point)
+
+		biggest = -1
+		for neighbour in lof.k_distances[point]:
+			if lof.k_distances[point][neighbour] > biggest:
+				biggest = lof.k_distances[point][neighbour]
+
+		print("\tBiggest:", biggest )
+
+		dist = lof.neighbours[point][(1,2)]
+
+		print("\tDistance", point, "to (1,2):", dist)
+
+		if biggest > dist:
+			sum += biggest
+		else:
+			sum += dist
+
+	print("Sum: ", sum)
+	print("LRD: ", point_neighbours_count/sum)
+	# 4. Calculate LOF
+
+	# 5. Sort
+
 
 if __name__ == "__main__":
 	main()
