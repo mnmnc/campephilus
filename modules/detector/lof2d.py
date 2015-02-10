@@ -15,9 +15,14 @@ class LOF2D:
 		self.k_distances = {}
 
 	def create_distance_dictionary(self):
-		distances = {}
+		"""
+		Creates a dictionary of distances between all points
+		:return:
+		"""
 		self.neighbours = {}
 
+		# TODO: Optimize this with the use of dynamic programming,
+		# TODO: since it calculates same distances twice
 		for i in range(len(self.data)-1):
 			point = (self.data[i][0],self.data[i][1])
 			point_neighbours = {}
@@ -38,22 +43,26 @@ class LOF2D:
 							self.neighbours.update({compared_point:temp_dict})
 			self.neighbours.update({point:point_neighbours})
 
-		# for key in self.neighbours:
-		# 	print("\n",key,"\t:\n")
-		# 	for k in self.neighbours[key]:
-		# 		print("\t",k,"\t:", self.neighbours[key][k])
+	def print_neighbours(self):
+		for key in self.neighbours:
+			print("\n",key,"\t:\n")
+			for k in self.neighbours[key]:
+				print("\t",k,"\t:", self.neighbours[key][k])
 
 	def get_knn(self, k=3):
-
+		"""
+		Limits previously created distances dictionary so that it will contain
+		only neighbours with distance equal or closer than k neighbour.
+		:param k: number that specifies which neighbour distance should designate the threshold
+		:return:
+		"""
 		for key in self.neighbours:
 			k_closest = []
 			temp_values = []
 			for subkey in self.neighbours[key]:
 				temp_values.append(self.neighbours[key][subkey])
 
-
 			temp_values.sort()
-			#print(temp_values)
 
 			threshold_value = temp_values[k-1]
 			print(key,", threashold: ", threshold_value)
@@ -70,6 +79,7 @@ class LOF2D:
 
 			self.k_distances.update({key:selected_dictionary})
 
+	def print_k_distances(self):
 		for key in self.k_distances:
 			print("\n",key,"\t:\n")
 			for subkey in self.k_distances[key]:
@@ -87,8 +97,10 @@ def main():
 
 	lof = LOF2D(points)
 
+
 	lof.create_distance_dictionary()
 	lof.get_knn(3)
+	lof.print_k_distances()
 
 if __name__ == "__main__":
 	main()
