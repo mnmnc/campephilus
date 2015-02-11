@@ -1,0 +1,48 @@
+Help on module modules.plotter.plot in modules.plotter:
+
+NAME
+    modules.plotter.plot
+
+CLASSES
+    builtins.object
+        Plot
+    
+    class Plot(builtins.object)
+     |  Methods defined here:
+     |  
+     |  clear_plot(self)
+     |  
+     |  plot(self, xlist, ylist, marker_style='circle', def_color='r', def_alpha=0.5, mylinewidth=2.0)
+     |  
+     |  plot_with_sizes(self, xlist, ylist, sizes, marker_style='circle', def_color='r', def_alpha=0.5)
+     |  
+     |  save(self, destination_filename='plotted.png', width=10, height=10, local_dpi=100)
+     |  
+     |  set_axis_limit(self, min_x=0, max_x=100, min_y=0, max_y=100)
+     |  
+     |  set_label(self, axis_name, label)
+     |  
+     |  set_note(self, x, y, text_x, text_y, text)
+     |      x,y - pointed end
+     |      text_x, text_y - location of the text
+     |  
+     |  set_text(self, x=0, y=0, text='Text missing')
+     |  
+     |  set_title(self, title='Title', size=12)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+
+FUNCTIONS
+    main()
+
+FILE
+    d:\prv\git\campephilus\modules\plotter\plot.py
+
+

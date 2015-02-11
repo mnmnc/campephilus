@@ -56,6 +56,10 @@ class LOF2DTestCase(unittest.TestCase):
 
 		self.assertEqual(correct, 3, "LOF gives unexpected results.\n" + error)
 
+	def test_other_operation(self):
+		self.assertEqual(1, 1)
+
+
 
 if __name__ == '__main__':
 	unittest.main(verbosity=2)

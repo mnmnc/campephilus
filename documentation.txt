@@ -1,0 +1,364 @@
+Help on module modules.tshark.tshark in modules.tshark:
+
+NAME
+    modules.tshark.tshark
+
+CLASSES
+    builtins.object
+        Tshark
+    
+    class Tshark(builtins.object)
+     |  Methods defined here:
+     |  
+     |  __init__(self, exe_path, in_path, out_path)
+     |  
+     |  add_field(self, category, name)
+     |      Adds field to self./fields/
+     |      :param category: one of acceptable categories [frame, ip, tcp, icmp, dns, udp]
+     |      :param name: name of the field available under category specified
+     |      :return: appends selected field to /fields/
+     |  
+     |  add_fields_by_category(self, category)
+     |      Adds multiple fields to self./fields/ based on category
+     |      :param category: one of acceptable categories [frame, ip, tcp, icmp, dns, udp]
+     |      :return: appends selected fields to /fields/
+     |  
+     |  add_filter(self, category)
+     |      Adds filter specifications based on selected category
+     |      :param category:
+     |      :return:
+     |  
+     |  create_command(self, filename, out_filename)
+     |      Create final command
+     |      :return:
+     |  
+     |  execute(self)
+     |      Executes tshark /shell required/
+     |      :return:
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  execution_command = ''
+     |  
+     |  fields = ''
+     |  
+     |  filter = ''
+
+FUNCTIONS
+    main()
+
+FILE
+    d:\prv\git\campephilus\modules\tshark\tshark.py
+
+
+Help on module modules.csvimporter.csvimp in modules.csvimporter:
+
+NAME
+    modules.csvimporter.csvimp
+
+CLASSES
+    builtins.object
+        Csvimp
+    
+    class Csvimp(builtins.object)
+     |  Methods defined here:
+     |  
+     |  __init__(self, input_file)
+     |  
+     |  load_data(self)
+     |  
+     |  set_intput(self, filename)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  data = []
+
+FUNCTIONS
+    main()
+    
+    reader(...)
+        csv_reader = reader(iterable [, dialect='excel']
+                                [optional keyword args])
+            for row in csv_reader:
+                process(row)
+        
+        The "iterable" argument can be any object that returns a line
+        of input for each iteration, such as a file object or a list.  The
+        optional "dialect" parameter is discussed below.  The function
+        also accepts optional keyword arguments which override settings
+        provided by the dialect.
+        
+        The returned object is an iterator.  Each iteration returns a row
+        of the CSV file (which can span multiple input lines):
+
+FILE
+    d:\prv\git\campephilus\modules\csvimporter\csvimp.py
+
+
+Help on module modules.netjinn.tcp in modules.netjinn:
+
+NAME
+    modules.netjinn.tcp
+
+CLASSES
+    builtins.object
+        Tcp
+    
+    class Tcp(builtins.object)
+     |  Methods defined here:
+     |  
+     |  __init__(self)
+     |  
+     |  flags_to_string_list(self, flags)
+     |      Converts decimal flags value to dictionary of flags
+     |      :param flags: Flags value in decimal
+     |      :return: dictionary of flag names and binary values
+     |  
+     |  split_data_to_streams(self, data, stream_id_position)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+
+FUNCTIONS
+    main()
+
+FILE
+    d:\prv\git\campephilus\modules\netjinn\tcp.py
+
+
+Help on module modules.netjinn.ip in modules.netjinn:
+
+NAME
+    modules.netjinn.ip
+
+CLASSES
+    builtins.object
+        Ip
+    
+    class Ip(builtins.object)
+     |  Methods defined here:
+     |  
+     |  __init__(self)
+     |  
+     |  str2dec(self, ip_string)
+     |      Convert IP from dot octet notation to single decimal
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+
+FUNCTIONS
+    main()
+
+FILE
+    d:\prv\git\campephilus\modules\netjinn\ip.py
+
+
+Help on module modules.plotter.plot in modules.plotter:
+
+NAME
+    modules.plotter.plot
+
+CLASSES
+    builtins.object
+        Plot
+    
+    class Plot(builtins.object)
+     |  Methods defined here:
+     |  
+     |  clear_plot(self)
+     |  
+     |  plot(self, xlist, ylist, marker_style='circle', def_color='r', def_alpha=0.5, mylinewidth=2.0)
+     |  
+     |  plot_with_sizes(self, xlist, ylist, sizes, marker_style='circle', def_color='r', def_alpha=0.5)
+     |  
+     |  save(self, destination_filename='plotted.png', width=10, height=10, local_dpi=100)
+     |  
+     |  set_axis_limit(self, min_x=0, max_x=100, min_y=0, max_y=100)
+     |  
+     |  set_label(self, axis_name, label)
+     |  
+     |  set_note(self, x, y, text_x, text_y, text)
+     |      x,y - pointed end
+     |      text_x, text_y - location of the text
+     |  
+     |  set_text(self, x=0, y=0, text='Text missing')
+     |  
+     |  set_title(self, title='Title', size=12)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+
+FUNCTIONS
+    main()
+
+FILE
+    d:\prv\git\campephilus\modules\plotter\plot.py
+
+
+Help on module modules.detector.lof2d in modules.detector:
+
+NAME
+    modules.detector.lof2d
+
+CLASSES
+    builtins.object
+        LOF2D
+    
+    class LOF2D(builtins.object)
+     |  Methods defined here:
+     |  
+     |  __init__(self, points)
+     |  
+     |  calculate_lof(self)
+     |      Calculates LOF for all points.
+     |      Updates local LOF dictionary with results.
+     |      :return:
+     |  
+     |  calculate_lrd(self)
+     |      Calculates local reachability density for each point.
+     |      Updates LRD dictionary with results.
+     |      :return:
+     |  
+     |  create_distance_dictionary(self)
+     |      Creates a dictionary of distances between all points
+     |      :return:
+     |  
+     |  get_knn(self, k=3)
+     |      Limits previously created distances dictionary so that it will contain
+     |      only neighbours with distance equal or closer than k neighbour.
+     |      :param k: number that specifies which neighbour distance should designate the threshold
+     |      :return:
+     |  
+     |  get_top(self, number)
+     |  
+     |  print_k_distances(self)
+     |  
+     |  print_lof(self)
+     |  
+     |  print_neighbours(self)
+     |  
+     |  sort_lof(self)
+     |      Sorts LOF data based on LOF value, descendingly
+     |      :return: list of tuples ( (x, y), lof_value )
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+
+FUNCTIONS
+    main()
+
+FILE
+    d:\prv\git\campephilus\modules\detector\lof2d.py
+
+
+Help on module campephilus:
+
+NAME
+    campephilus - # Main file of the project
+
+CLASSES
+    builtins.object
+        Campephilus
+    
+    class Campephilus(builtins.object)
+     |  Methods defined here:
+     |  
+     |  __init__(self)
+     |  
+     |  add_setting(self, setting)
+     |      Adds setting element.
+     |      :param setting: dictionary element expected.
+     |      :return:
+     |  
+     |  add_tool(self, tool)
+     |      Adds tools to self./tools/
+     |      :param tool: dictionary element expected.
+     |      :return:
+     |  
+     |  get_headers(self, headers_string)
+     |      Reads headers names from tshark fields string.
+     |      For example
+     |              ['ip.src', 'ip.dst', 'ip.ttl'] from
+     |              " -e ip.src -e ip.dst -e ip.ttl "
+     |      
+     |      :param headers_string:
+     |      :return:
+     |  
+     |  showoff(self, values=False)
+     |      Showing settings and tools content.
+     |      :param values: Whether to show inner values or not
+     |      :return:
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data and other attributes defined here:
+     |  
+     |  jobs = {}
+     |  
+     |  settings = {}
+     |  
+     |  tools = {}
+
+FUNCTIONS
+    main()
+    
+    main2()
+    
+    numeric_compare(x, y)
+
+FILE
+    d:\prv\git\campephilus\campephilus.py
+
+

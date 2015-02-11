@@ -338,6 +338,7 @@ def main2():
 	# 7. Get top 3
 	print(cam.tools["lof"].get_top(3))
 
+
 if __name__ == "__main__":
 	#main()
 	main2()

@@ -84,13 +84,14 @@ class LOF2D:
 
 			self.k_distances.update({key:selected_dictionary})
 
-	def print_k_distances(self):
-		for key in self.k_distances:
-			print("\n",key,"\t:\n")
-			for subkey in self.k_distances[key]:
-				print("\t",subkey,"\t:", self.k_distances[key][subkey])
+
 
 	def calculate_lrd(self):
+		"""
+		Calculates local reachability density for each point.
+		Updates LRD dictionary with results.
+		:return:
+		"""
 		for point in self.k_distances:
 			neighbours_count = len(self.k_distances[point])
 
@@ -113,6 +114,11 @@ class LOF2D:
 			self.reach_distance_sum.update({point:sum})
 
 	def calculate_lof(self):
+		"""
+		Calculates LOF for all points.
+		Updates local LOF dictionary with results.
+		:return:
+		"""
 		for point in self.k_distances:
 			lrd_sum = 0
 			for neighbour in self.k_distances[point]:
@@ -120,11 +126,21 @@ class LOF2D:
 			self.lof.update({point:lrd_sum * self.reach_distance_sum[point]})
 
 	def sort_lof(self):
+		"""
+		Sorts LOF data based on LOF value, descendingly
+		:return: list of tuples ( (x, y), lof_value )
+		"""
 		self.sorted_lof = sorted(self.lof.items(), key=operator.itemgetter(1), reverse=True)
 
 	def print_lof(self):
 		for ele in self.sorted_lof:
 			print("point:", ele[0], "lof:", ele[1])
+
+	def print_k_distances(self):
+		for key in self.k_distances:
+			print("\n",key,"\t:\n")
+			for subkey in self.k_distances[key]:
+				print("\t",subkey,"\t:", self.k_distances[key][subkey])
 
 	def get_top(self, number):
 		result = []
@@ -165,6 +181,10 @@ def main():
 
 	# 7. Get top 3
 	print(lof.get_top(3))
+
+	import pydoc
+	help(lof)
+
 
 if __name__ == "__main__":
 	main()
