@@ -5,6 +5,7 @@ from modules.csvimporter import csvimp
 from modules.netjinn import tcp
 from modules.netjinn import ip
 from modules.plotter import plot
+from modules.detector import lof2d
 
 class Campephilus:
 
@@ -225,14 +226,118 @@ def main():
 	# 	 2 {'5.135.250.51', '37.187.81.8'} [0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0]
 	# 	 3 {'5.135.250.51', '37.187.81.8'} [0, 2, 1, 0, 3, 0, 0, 0, 0, 0, 0, 0]
 
-	for key in stream_dictionary.keys():
-	#print(key)
-		for stream in stream_dictionary[key]:
-			print("\t", stream, ip_list[key], flags_dictionary[stream])
+	# for key in stream_dictionary.keys():
+	# #print(key)
+	# 	for stream in stream_dictionary[key]:
+	# 		print("\t", stream, ip_list[key], flags_dictionary[stream])
+
+
+	for row in 	cam.jobs["job_id"]["data"]:
+		print(row)
+
+def main2():
+
+	cam = Campephilus()
+
+	# Settings
+	cam.add_setting({"input": "D:\\Prv\\Git\\campephilus\\input\\"})
+	cam.add_setting({"output": "D:\\Prv\\Git\\campephilus\\output\\"})
+	cam.add_setting({"tshark": "D:\\Apps\\Wireshark\\tshark.exe"})
+	cam.add_setting({"pcap_files": "pcap\\"})
+	cam.add_setting({"csv_files": "csv\\"})
+	cam.add_setting({"csv_file_name": "campephilus"})
+	cam.add_setting({"png_file_name": "campephilus"})
+	cam.add_setting({"animated_file": "campephilus"})
+
+	# Add tools
+
+	# CSV tool for parsing csv files to lists
+	cam.add_tool({"csv":
+		csvimp.Csvimp(
+			cam.settings["input"] +
+			cam.settings["csv_files"] +
+			"out.csv"
+		)
+	})
+
+	# Create Thark (exe, in , out) object
+	cam.add_tool({"shark":
+		tshark.Tshark(
+			cam.settings["tshark"],
+			cam.settings["input"] + cam.settings["pcap_files"],
+			cam.settings["input"] + cam.settings["csv_files"]
+		)
+	})
+
+	cam.add_tool({"plot":plot.Plot()})
+	plot.plt.gcf()
+
+
+	# Create TCP and IP tools
+	cam.add_tool({"tcp": tcp.Tcp()})
+	cam.add_tool({"ip": ip.Ip()})
 
 
 
+	# Add fields
+	# cam.tools["shark"].add_field("frame", "time")
+	# cam.tools["shark"].add_field("tcp", "stream")
+	# cam.tools["shark"].add_field("tcp", "seq")
+	# cam.tools["shark"].add_field("tcp", "flags")
+	cam.tools["shark"].add_field("tcp", "src")
+	cam.tools["shark"].add_field("tcp", "dst")
+	#cam.tools["shark"].add_fields_by_category("frame")
+	# cam.tools["shark"].add_fields_by_category("ip")
+	# cam.tools["shark"].add_fields_by_category("tcp")
+	# cam.tools["shark"].add_field("ip", "src")
+	# cam.tools["shark"].add_field("ip", "dst")
+	# cam.tools["shark"].add_field("tcp", "stream")
+	# cam.tools["shark"].add_field("tcp", "flags")
 
+	# Add limitation filter
+	cam.tools["shark"].add_filter("tcp")
+
+	# Create command
+	cam.tools["shark"].create_command("infinz_00001_20140408174617.pcap", "out.csv")
+
+	# Show me what you got
+	#cam.showoff(True)
+
+	# Execute shark
+	cam.tools["shark"].execute()
+
+	# Load data from csv file
+	cam.tools["csv"].load_data()
+
+	# Update jobs with data
+	cam.jobs.update({
+		"job_id": {
+			"headers": cam.get_headers(cam.tools["shark"].fields),
+			"data": cam.tools["csv"].data
+		}
+	})
+
+	cam.add_tool({"lof": lof2d.LOF2D( cam.jobs["job_id"]["data"])})
+	cam.tools["lof"].create_distance_dictionary()
+
+	cam.tools["lof"].get_knn(3)
+	#lof.print_k_distances()
+
+	# 3. Calculate local reachability density for all points
+	cam.tools["lof"].calculate_lrd()
+
+	# 4. Calculate LOF
+	cam.tools["lof"].calculate_lof()
+
+	# 5. Sort
+	cam.tools["lof"].sort_lof()
+
+	# 6. Show
+	cam.tools["lof"].print_lof()
+
+	# 7. Get top 3
+	print(cam.tools["lof"].get_top(3))
 
 if __name__ == "__main__":
-	main()
+	#main()
+	main2()

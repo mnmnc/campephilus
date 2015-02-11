@@ -30,10 +30,10 @@ class LOF2D:
 		# TODO: Optimize this with the use of dynamic programming,
 		# TODO: since it calculates same distances twice
 		for i in range(len(self.data)-1):
-			point = (self.data[i][0],self.data[i][1])
+			point = (int(self.data[i][0]),int(self.data[i][1]))
 			point_neighbours = {}
 			for j in range(len(self.data)-1):
-				compared_point = (self.data[j][0], self.data[j][1])
+				compared_point = (int(self.data[j][0]), int(self.data[j][1]))
 				if i != j:
 					if compared_point not in point_neighbours:
 						sum = (point[0] - compared_point[0])*(point[0] - compared_point[0]) + (point[1] - compared_point[1]) * (point[1] - compared_point[1])
