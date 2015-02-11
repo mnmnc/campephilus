@@ -1,4 +1,6 @@
 import math
+import operator
+
 
 class LOF2D:
 
@@ -16,6 +18,7 @@ class LOF2D:
 		self.lrd = {}
 		self.reach_distance_sum = {}
 		self.lof = {}
+		self.sorted_lof = []
 
 	def create_distance_dictionary(self):
 		"""
@@ -68,7 +71,6 @@ class LOF2D:
 			temp_values.sort()
 
 			threshold_value = temp_values[k-1]
-			print(key,", threashold: ", threshold_value)
 
 			for subkey in self.neighbours[key]:
 				if self.neighbours[key][subkey] <= threshold_value:
@@ -115,7 +117,20 @@ class LOF2D:
 			lrd_sum = 0
 			for neighbour in self.k_distances[point]:
 				lrd_sum += self.lrd[neighbour]
-			print("LOF", point, lrd_sum * self.reach_distance_sum[point])
+			self.lof.update({point:lrd_sum * self.reach_distance_sum[point]})
+
+	def sort_lof(self):
+		self.sorted_lof = sorted(self.lof.items(), key=operator.itemgetter(1), reverse=True)
+
+	def print_lof(self):
+		for ele in self.sorted_lof:
+			print("point:", ele[0], "lof:", ele[1])
+
+	def get_top(self, number):
+		result = []
+		for i in range(number):
+			result.append(self.sorted_lof[i][0])
+		return result
 
 def main():
 
@@ -130,73 +145,26 @@ def main():
 
 	# 1. Calculate all the distances
 	lof.create_distance_dictionary()
-
-	lof.print_neighbours()
+	#lof.print_neighbours()
 
 	# 2. Get all neighbours that are closer or equal to k neighbour
 	lof.get_knn(neighbours)
-
-	lof.print_k_distances()
+	#lof.print_k_distances()
 
 	# 3. Calculate local reachability density for all points
-
-	lrd = {}
-	reachdist_sum = {}
-
-	# FOR [1, 2] - first point
-	for t_point in lof.k_distances:
-		# Get number of neighbours
-		point_neighbours_count = len(lof.k_distances[t_point])
-		#print("Neighbours count:", point_neighbours_count)
-
-			# For each neighbour calculate reachdist
-				# maximum from
-				#               distance from neighbour to its k neighbour
-				#               or
-				#               distance from neighbour to original point
-		sum = 0
-		for point in lof.k_distances[t_point]:
-			#print("Calculating reachdist for", point)
-
-			biggest = -1
-			for neighbour in lof.k_distances[point]:
-				if lof.k_distances[point][neighbour] > biggest:
-					biggest = lof.k_distances[point][neighbour]
-
-			#print("\tBiggest:", biggest )
-
-			dist = lof.neighbours[point][t_point]
-
-			#print("\tDistance", point, "to", t_point, ":", dist)
-
-			if biggest > dist:
-				sum += biggest
-			else:
-				sum += dist
-
-
-		#print("Sum: ", sum)
-		print("LRD of ", t_point , ":", point_neighbours_count/sum)
-		lrd.update({t_point: point_neighbours_count/sum})
-		reachdist_sum.update({t_point:sum})
-
 	lof.calculate_lrd()
 
 	# 4. Calculate LOF
-
-	for t_point in lof.k_distances:
-		#print("LOF", t_point)
-		lrd_sum = 0
-		for neighbour in lof.k_distances[t_point]:
-			#print("\tNeighbour", neighbour, "lrd", lrd[neighbour])
-			lrd_sum += lrd[neighbour]
-		#print("\tSum", reachdist_sum[t_point])
-		print("LOF", t_point, lrd_sum * reachdist_sum[t_point])
-
 	lof.calculate_lof()
 
 	# 5. Sort
+	lof.sort_lof()
 
+	# 6. Show
+	#lof.print_lof()
+
+	# 7. Get top 3
+	print(lof.get_top(3))
 
 if __name__ == "__main__":
 	main()
