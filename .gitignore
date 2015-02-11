@@ -2,3 +2,4 @@
 *.pcap
 *csv
 input/csv/out.csv
+*.pyc
