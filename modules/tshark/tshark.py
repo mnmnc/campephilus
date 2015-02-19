@@ -113,6 +113,8 @@ class Tshark:
 		# Adds output directory
 		self.execution_command += " > " + self.output_path + out_filename
 
+		print(self.execution_command)
+
 	def execute(self):
 		"""
 		Executes tshark /shell required/
@@ -128,10 +130,11 @@ class Tshark:
 def main():
 
 	# Input
-	test_input = "smaller_00002_20120316134254.pcap"
+	#test_input = "smaller_00002_20120316134254.pcap"
+	test_input = "split_00000_20120316133000.pcap"
 
 	# Output
-	test_output = "test.csv"
+	test_output = "test2.csv"
 
 	# Create tshark object
 	shark = Tshark("D:\\Apps\\Wireshark\\tshark.exe", "..\\..\\input\\pcap\\", "..\\..\\input\\csv\\")
@@ -139,9 +142,14 @@ def main():
 	# Add fields
 	shark.add_fields_by_category("tcp")
 	shark.add_fields_by_category("ip")
+	shark.add_fields_by_category("icmp")
+	shark.add_fields_by_category("dns")
+	shark.add_fields_by_category("frame")
+	shark.add_fields_by_category("udp")
+
 
 	# Add filters
-	shark.add_filter("tcp")
+	shark.add_filter("ip")
 
 	# Create command
 	shark.create_command(test_input, test_output)
