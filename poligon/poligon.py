@@ -57,28 +57,50 @@ def main():
 				}
 			)
 
-	per_hour_sums = {}
+	plt = plot.Plot()
+
+
+	rst = {}
+	syn = {}
+
 	for ele in data:
 		date = float(ele["frametime"])
 		hour = int(date / 3600)
-		if hour in per_hour_sums:
-			per_hour_sums[hour] += 1
-		else:
-			per_hour_sums.update({hour: 1})
+
+		if ele["tcpflags"] == "2":
+			# SYN
+			if hour in syn.keys():
+				syn[hour] += 1
+			else:
+				syn.update({hour: 1})
+		elif ele["tcpflags"] == "4" or ele["tcpflags"] == "14":
+			# RST
+			if hour in rst.keys():
+				rst[hour] += 1
+			else:
+				rst.update({hour: 1})
 
 	xs = []
 	ys = []
 
-	for key in per_hour_sums.keys():
-		print(key, per_hour_sums[key])
-		xs.append(int(key))
-		ys.append(int(per_hour_sums[key]))
+	for key in rst.keys():
+		xs.append(key)
+		ys.append(rst[key])
 
-	plt = plot.Plot()
+	plt.plot(xs, ys, "circle", "r", 0.4)
 
-	plt.plot(xs, ys, "circle", "b", 0.4)
+	xss = []
+	yss = []
 
-	plt.save("net2.png")
+	for key in syn.keys():
+		xss.append(key)
+		yss.append(syn[key])
+
+	plt.plot(xss, yss, "circle", "b", 0.4)
+
+
+
+	plt.save("syn_rst_flags_per_hour.png", 30, 8)
 
 
 if __name__ == "__main__":
