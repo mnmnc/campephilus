@@ -73,7 +73,7 @@ def main():
 				syn[hour] += 1
 			else:
 				syn.update({hour: 1})
-		elif ele["tcpflags"] == "4" or ele["tcpflags"] == "14":
+		elif ele["tcpflags"] == "16":
 			# RST
 			if hour in rst.keys():
 				rst[hour] += 1
@@ -100,7 +100,7 @@ def main():
 		if s > 0:
 			ys.append( r / s )
 		else:
-			ys.append( r / 1+r)
+			ys.append( 0 )
 
 	plt.plot(xs, ys, "circle", "r", 0.4)
 
@@ -108,7 +108,7 @@ def main():
 
 
 
-	plt.save("syn_rst_flags_ratio_per_hour3.png", 30, 8, 300)
+	plt.save("ack_syn_flags_ratio_per_hour3.png", 30, 8, 300)
 
 
 if __name__ == "__main__":
