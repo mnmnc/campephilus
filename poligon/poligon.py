@@ -84,23 +84,31 @@ def main():
 	ys = []
 
 	for key in rst.keys():
+		r = 0
+		s = 0
+		try:
+			r = rst[key]
+		except:
+			r = 0
+
+		try:
+			s = syn[key]
+		except:
+			s = 0
+
 		xs.append(key)
-		ys.append(rst[key])
+		if s > 0:
+			ys.append( r / s )
+		else:
+			ys.append( r / 1+r)
 
 	plt.plot(xs, ys, "circle", "r", 0.4)
 
-	xss = []
-	yss = []
-
-	for key in syn.keys():
-		xss.append(key)
-		yss.append(syn[key])
-
-	plt.plot(xss, yss, "circle", "b", 0.4)
 
 
 
-	plt.save("syn_rst_flags_per_hour.png", 30, 8)
+
+	plt.save("syn_rst_flags_ratio_per_hour3.png", 30, 8, 300)
 
 
 if __name__ == "__main__":
