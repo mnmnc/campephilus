@@ -3,7 +3,7 @@ import sys; import os
 sys.path.insert(0, os.path.abspath('..'))
 
 from modules.csvimporter import csvimp
-
+from modules.plotter import plot
 
 def main():
 
@@ -11,8 +11,7 @@ def main():
 	csv.load_data()
 	data = []
 
-	for packet in csv.data:
-		packet_arr = packet.split(",")
+	for packet_arr in csv.data:
 		if len(packet_arr) > 2:
 			tcpsrc = packet_arr[0]
 			tcpdst = packet_arr[1]
@@ -58,8 +57,28 @@ def main():
 				}
 			)
 
-	for i in range(10):
-		print(data[i])
+	per_hour_sums = {}
+	for ele in data:
+		date = float(ele["frametime"])
+		hour = int(date / 3600)
+		if hour in per_hour_sums:
+			per_hour_sums[hour] += 1
+		else:
+			per_hour_sums.update({hour: 1})
+
+	xs = []
+	ys = []
+
+	for key in per_hour_sums.keys():
+		print(key, per_hour_sums[key])
+		xs.append(int(key))
+		ys.append(int(per_hour_sums[key]))
+
+	plt = plot.Plot()
+
+	plt.plot(xs, ys, "circle", "b", 0.4)
+
+	plt.save("net2.png")
 
 
 if __name__ == "__main__":
